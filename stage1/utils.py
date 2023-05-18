@@ -4,7 +4,7 @@ import cv2
 from natsort import natsorted
 from glob import glob
 
-from stage1.denoise import SpatialFilter, FrequencyFilter
+from denoise import SpatialFilter, FrequencyFilter
 
 # load dummy images from a folder
 def load_dummy(noise_type: str) -> list:
