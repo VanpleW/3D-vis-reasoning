@@ -3,7 +3,7 @@ import cv2
 from skimage import filters
 from skimage.morphology import disk
 import pywt
-
+from . import chen_code_py as chen
 
 class DenoiseSolver():
     """
@@ -16,6 +16,7 @@ class DenoiseSolver():
 
     input: img, kernal_size, K, sigma
     output: img_denoised
+
     """
     def median_filter(img, kernal_size: int = 3) -> np.array:
         img_denoised = np.zeros(img.shape)
@@ -32,21 +33,22 @@ class DenoiseSolver():
         return img_denoised
     
     
-    def wiener_filter(img, kernal_size: int = 3, K: int = None) -> np.array:
+    def wiener_filter(img, kernal_size: int = 3, K: float = 0.01) -> np.array:
         """Apply a Wiener filter to a 2D image."""
         img_denoised = np.zeros(img.shape)
+        kernel = np.ones((kernal_size, kernal_size)) / (kernal_size ** 2)
         for i in range(3): # loop over each channel
             dummy = np.copy(img[:,:,i])
             dummy = np.fft.fft2(dummy)
-            kernel = np.fft.fft2(kernel, s = dummy.shape)
-            kernel = np.conj(kernal_size) / (np.abs(kernel) ** 2 + K)
-            dummy = dummy * kernel
+            kernel_f = np.fft.fft2(kernel, s = dummy.shape)
+            kernel_f = np.conj(kernel_f) / (np.abs(kernel_f) ** 2 + K)
+            dummy = dummy * kernel_f
             dummy = np.abs(np.fft.ifft2(dummy))
             img_denoised[:,:,i] = dummy
         return img_denoised
     
 
-    def wavelet_transform(img, sigma: int = 0.1 ) -> np.array:
+    def wavelet_transform(img, sigma: float = 0.1 ) -> np.array:
         """Apply a wavelet transform to a 2D image."""
         coeffs = pywt.wavedec2(img, 'db8', level=4)
         # Threshold the wavelet coefficients
@@ -55,4 +57,10 @@ class DenoiseSolver():
             coeffs[i] = pywt.threshold(coeffs[i], threshold)
         # Perform an inverse wavelet transform
         img_denoised = pywt.waverec2(coeffs, 'db8')
+        return img_denoised
+    
+
+    def lmg_transform(img, patch_size: int = ) -> np.array:
+        """Apply a LMG transform to a 2D image."""
+        img_denoised, _ = chen.LMG(img, patch_size)
         return img_denoised

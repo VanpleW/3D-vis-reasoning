@@ -7,7 +7,7 @@ from skimage.metrics import structural_similarity as ssim
 from PIL import Image
 from tqdm import tqdm
 
-from . import util
+from . import utils
 
 
 def test_dummy_stage1(noise_type: str, method:str) -> list:
@@ -33,9 +33,9 @@ def test_dummy_stage1(noise_type: str, method:str) -> list:
     psnr_val = 0
     ssim_val = 0
     # choose denoise method
-    sol = util.solver(method)
+    sol = utils.solver(method)
 
-    length, files = util.load_dummy(noise_type)
+    length, files = utils.load_dummy(noise_type)
     print('length of files: ', length)
     for noise_img, img in tqdm(files):
         img = np.array(Image.open(img))/255.0

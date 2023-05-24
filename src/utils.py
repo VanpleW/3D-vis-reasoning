@@ -24,7 +24,6 @@ def load_images(path: str) -> list:
 
 # select denoise method
 def solver(method: str):
-
     solverDict = {
         'median': denoise.DenoiseSolver.median_filter,
         'bilateral': denoise.DenoiseSolver.bilateral_filter,
@@ -33,5 +32,6 @@ def solver(method: str):
         }
     return solverDict[method]
 
+# grid search for best parameters
 def grid_search(method: str):
     return None
