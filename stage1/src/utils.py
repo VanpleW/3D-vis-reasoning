@@ -4,7 +4,7 @@ import cv2
 from natsort import natsorted
 from glob import glob
 
-from . import denoise
+#from . import denoise
 
 # load dummy images from a folder
 def load_dummy(noise_type: str):
@@ -19,8 +19,13 @@ def load_dummy(noise_type: str):
         return None, None
     
 # load images from uploaded test_folder
-def load_images(path: str) -> list:
-    return None
+def load_images(path: str):
+    if os.path.exists(path):
+        files = natsorted(glob(path + '/*.png'))
+        return zip(files)
+    else:
+        print('Error input path!')
+        return None
 
 # select denoise method
 def solver(method: str):

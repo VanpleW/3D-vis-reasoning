@@ -3,7 +3,7 @@ import cv2
 from skimage import filters
 from skimage.morphology import disk
 import pywt
-from . import chen_code_py as chen
+from ..ref.chen_code_py.LMG import LMG
 
 class DenoiseSolver():
     """
@@ -62,5 +62,5 @@ class DenoiseSolver():
 
     def lmg_transform(img, patch_size: int = 16) -> np.array:
         """Apply a LMG transform to a 2D image."""
-        img_denoised, _ = chen.LMG(img, patch_size)
+        img_denoised, _ = LMG(img, patch_size)
         return img_denoised
