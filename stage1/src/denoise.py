@@ -60,7 +60,7 @@ class DenoiseSolver():
         return img_denoised
     
 
-    def lmg_transform(img, patch_size: int = ) -> np.array:
+    def lmg_transform(img, patch_size: int = 16) -> np.array:
         """Apply a LMG transform to a 2D image."""
         img_denoised, _ = chen.LMG(img, patch_size)
         return img_denoised

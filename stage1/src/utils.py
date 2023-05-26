@@ -9,7 +9,7 @@ from . import denoise
 # load dummy images from a folder
 def load_dummy(noise_type: str):
     dummy_path = os.getcwd() + '/stage1_data/' + noise_type
-    print(dummy_path)
+    #print(dummy_path)
     if os.path.exists(dummy_path):
         noise_files = natsorted(glob(dummy_path + '/*.png'))
         clean_files = natsorted(glob(os.getcwd() + '/stage1_data/input_imgs/*'))
