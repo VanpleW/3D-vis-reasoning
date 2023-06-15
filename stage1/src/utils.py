@@ -3,8 +3,7 @@ import os
 import cv2
 from natsort import natsorted
 from glob import glob
-
-#from . import denoise
+from src.denoise import DenoiseSolver
 
 # load dummy images from a folder
 def load_dummy(noise_type: str):
@@ -30,10 +29,11 @@ def load_images(path: str):
 # select denoise method
 def solver(method: str):
     solverDict = {
-        'median': denoise.DenoiseSolver.median_filter,
-        'bilateral': denoise.DenoiseSolver.bilateral_filter,
-        'wiener': denoise.DenoiseSolver.wiener_filter,
-        'wavelet': denoise.DenoiseSolver.wavelet_transform
+        'median': DenoiseSolver.median_filter,
+        'bilateral': DenoiseSolver.bilateral_filter,
+        'wiener': DenoiseSolver.wiener_filter,
+        'wavelet': DenoiseSolver.wavelet_transform,
+        'LMG': DenoiseSolver.lmg_transforms
         }
     return solverDict[method]
 

@@ -1,6 +1,14 @@
 import numpy as np
 from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
+from .cho_code_py.wrap_boundary_liu import wrap_boundary_liu
+from .cho_code_py.opt_fft_size import opt_fft_size
+from .L0Restoration import L0Restoration
+from .L0_LMG_deblur import L0_LMG_deblur
+from .cho_code_py.threshold_pxpy_v1 import threshold_pxpy_v1
+from .estimate_psf import estimate_psf
+from skimage import measure
+
 
 def blind_deconv_main(blur_B, k, lambda_lmg, lambda_grad, threshold, opts):
     # derivative filters
@@ -27,7 +35,7 @@ def blind_deconv_main(blur_B, k, lambda_lmg, lambda_grad, threshold, opts):
         k = estimate_psf(Bx, By, latent_x, latent_y, 2, k.shape)
 
         print('pruning isolated noise in kernel...')
-        CC = bwconncomp(k, 8)
+        CC = measure.label(k, 8)
         for ii in range(CC['NumObjects']):
             currsum = np.sum(k[CC['PixelIdxList'][ii]])
             if currsum < .1:
@@ -46,21 +54,11 @@ def blind_deconv_main(blur_B, k, lambda_lmg, lambda_grad, threshold, opts):
             lambda_grad = max(lambda_grad / 1.1, 1e-4)
         else:
             lambda_grad = 0
-
-        plt.figure(1)
+        
         S[S < 0] = 0
         S[S > 1] = 1
-        plt.subplot(1, 3, 1)
-        plt.imshow(blur_B, cmap='gray')
-        plt.title('Blurred image')
-        plt.subplot(1, 3, 2)
-        plt.imshow(S, cmap='gray')
-        plt.title('Interim latent image')
-        plt.subplot(1, 3, 3)
-        plt.imshow(k, cmap='gray')
-        plt.title('Estimated kernel')
-        plt.show()
-
+    
+    # Refine kernel
     k[k < 0] = 0
     k = k / np.sum(k)
 
