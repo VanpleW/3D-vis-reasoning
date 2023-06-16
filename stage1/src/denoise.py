@@ -13,6 +13,7 @@ class DenoiseSolver():
     - Bilateral filter
     - wiener filter
     - wavelet transform
+    - lmg transform
 
     input: img, kernal_size, K, sigma
     output: img_denoised
@@ -62,5 +63,16 @@ class DenoiseSolver():
 
     def lmg_transform(img, patch_size: int = 16) -> np.array:
         """Apply a LMG transform to a 2D image."""
-        img_denoised, _ = blind_deconv(y, lambda_dark, lambda_grad, opts)
+        opts = {}
+        opts['prescale'] = 1 #downsampling
+        opts.xk_iter = 5  #the iterations
+        opts.gamma_correct = 1.0
+        opts.k_thresh = 20
+        lambda_lmg =4e-3
+        lambda_grad =4e-3
+        opts.gamma_correct = 1
+        lambda_tv = 0.001
+        lambda_l0 = 5e-4
+        weight_ring = 1
+        _, img_denoised = blind_deconv(img, lambda_lmg, lambda_grad, opts)
         return img_denoised
