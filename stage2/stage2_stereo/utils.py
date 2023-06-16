@@ -9,13 +9,20 @@ def search_params(left_img, right_img, dis_gt_img, bs, md):
     stereo = cv2.StereoBM_create(numDisparities=md, blockSize=bs)
     disparity = stereo.compute(left_img, right_img)
     disparity = cv2.normalize(disparity, None, alpha=0, beta=md, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    # error
-    mask = np.logical_and(disparity = 0, dis_gt_img = 0)
-    #mask = np.logical_or(disparity == 0, dis_gt_img == 0)
+    #mask = np.logical_and(disparity = 0, dis_gt_img = 0)
+    mask = np.logical_or(disparity == 0, dis_gt_img == 0)
     masked_sq_err = np.ma.array(np.square(disparity - dis_gt_img), mask=mask)
     rmse = np.sqrt(masked_sq_err.mean())
     return rmse
 
+def semiglob_search_params(left_img, right_img, dis_gt_img, bs, md):
+    stereo = cv2.StereoSGBM_create(numDisparities=md, blockSize=bs)
+    disparity = stereo.compute(left_img, right_img)
+    disparity = cv2.normalize(disparity, None, alpha=0, beta=md, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+    mask = np.logical_or(disparity == 0, dis_gt_img == 0)
+    masked_sq_err = np.ma.array(np.square(disparity - dis_gt_img), mask=mask)
+    rmse = np.sqrt(masked_sq_err.mean())
+    return rmse
 
 
 def psnr_ssim_rect(orig_img, rectified_img):

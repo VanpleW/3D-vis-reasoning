@@ -1,0 +1,2 @@
+2023-06-15 15:31:11,148 - training_logger - INFO - finished 1/720 tasks
+2023-06-15 15:31:11,149 - training_logger - INFO - params: ('SIFT', 100, 0.01, 'BruteForce', 0.7)

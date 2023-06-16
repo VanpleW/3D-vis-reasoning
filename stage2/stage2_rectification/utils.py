@@ -55,7 +55,7 @@ def unwrap(orig_img: np.ndarray, wraped_img: np.ndarray, ft_detector, ft_matcher
     kp2, des2 = ft_detector.detectAndCompute(wraped_img_gray, None)
     
     # match.distance is a float between {0:100} - lower means more similar
-    matches = ft_matcher.knnMatch(des1, des2, k=4)
+    matches = ft_matcher.knnMatch(des1, des2, k=2)
 
     # Apply ratio test
     good = []
@@ -131,3 +131,33 @@ def cal_psnr_ssim(files, f_detector, f_matcher, f_ratio, num):
 
     #print('PSNR: ', psnr_sum/num, 'and SSIM: ', ssim_sum/num)
     return (psnr_sum/num, ssim_sum/num)
+
+
+"""
+    func to_optimize:
+    - this function is used to optimize the parameters of the feature matching algorithm
+"""
+def to_optimize(params, files:list, num:int) -> np.float_:
+    f_detector, nfeatures, contrastThreshold, f_matcher, f_ratio = params
+
+    # select the feature detector
+    if f_detector == 'SIFT':
+        ft_detector = cv2.SIFT_create(nfeatures=nfeatures, contrastThreshold=contrastThreshold)
+        #elif f_detector == 'SURF':
+        #    ft_detector = cv2.xfeatures2d.SURF_create(nfeatures=nfeatures)
+    elif f_detector == 'ORB':
+        ft_detector = cv2.ORB_create(nfeatures=nfeatures)
+    else:
+        raise ValueError('unknown feature detector')
+    
+    # select the feature matcher
+    if f_matcher == 'BruteForce':
+        ft_matcher = cv2.BFMatcher()
+    elif f_matcher == 'FLANN':
+        ft_matcher = cv2.FlannBasedMatcher()
+    else:
+        raise ValueError('unknown feature matcher')
+
+    
+    psnr_val, _ = cal_psnr_ssim(files, ft_detector, ft_matcher, f_ratio, num)
+    return psnr_val
