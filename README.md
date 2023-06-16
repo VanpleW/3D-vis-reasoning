@@ -3,8 +3,40 @@
 A stero vision-based 3D reconstruction and Recognition System,
 originally developed under the scope of ECE188, Spring 2023, UCLA.
 
-All files named demo.ipynb are the ones for performance purpose, other files are suppliment functions.
+As in the repo structure below, all files named **demo.ipynb** are the ones for performance purpose, other files are suppliment functions.
 
+- 3D-vis-reasoning
+  - .vscode
+    - settings.json
+  - stage1
+    - ref
+    - src
+    - stage1_data
+    - .DS_Store
+    - __init__.py
+    - **demo.ipynb**
+  - stage2
+    - stage2_rectification
+        - input_imgs
+        - warped_imgs
+        - __init__.py
+        - **demo.ipynb**
+        - training.log
+        - utils.py
+    - stage2_stereo
+        - disparities
+        - left_imgs
+        - right_imgs
+        - __init__.py
+        - **demo.ipynb**
+        - utils.py
+    - .DS_Store
+    - Final Project Part 2.pdf
+  - stage3
+    - **3Ddetection.ipynb**
+  - .DS_Store
+  - LICENSE
+  - README.md
 
 
 ## Data Processing
@@ -30,7 +62,7 @@ Denoise the input image data, with the following tools:
 4. Calculate Depth: [Planned]
     Once the disparity map is computed, the depth can be calculated using the formula:
 
-$ Z = \frac{fB}{d} $
+$$ Z = \frac{fB}{d} $$
 ​
 where:
 
